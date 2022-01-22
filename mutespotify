@@ -1,0 +1,138 @@
+#!/bin/bash
+SONG=$( cat ~/.nowplaying2.tmp)
+
+send_mute(){
+    local NOTMUTE=$(amixer get Master | sed 5q | grep -q '\[on\]' )
+    local TOGGLE=$( pactl set-sink-mute @DEFAULT_SINK@ 1 )
+    if $NOTMUTE; then $TOGGLE ; fi
+    }
+send_unmute(){
+    local ISMUTE=$( amixer get Master | sed 5q | grep -q '\[off\]' )
+    local TOGGLE=$( pactl set-sink-mute @DEFAULT_SINK@ 0 )
+    if $ISMUTE; then $TOGGLE; fi
+    }
+
+while : ; do
+    if ! $(pgrep -x "spotify" >/dev/null) ; then
+        #echo "error 1";
+        echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+        #exec bash "$0" "$@"
+    elif $(pidof -x "spotify">/dev/null ) ; then
+        echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+    
+    case $SONG in
+        "Advertisement" )
+        notify-send -t 2000 "🔇️ FUCK ADS 🔇️" &&
+        send_mute ;
+        echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+        #echo "AD IS HAPPENING";
+        sleep 12
+                exec bash "$0" "$@"
+            ;;
+        \n )
+        echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+        #echo "error3";
+        sleep 30
+            ;;
+        "spotify is off as fuck" )
+        #echo "error4";
+        send_unmute;
+        sleep 30
+            ;;
+        * )
+        #echo "PLAYNG";
+        send_unmute;
+        echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+        sleep 1
+                    exec bash "$0" "$@"
+            ;;
+    esac;
+    
+    else echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp ; #IDK IF NEEDED
+            echo "error6";
+            send_unmute;
+    fi;
+
+sleep 3;
+#exec bash "$0" "$@"
+done
+
+
+##############backup##########backup#######################
+#        case $SONG in
+#        "Advertisement" )
+#            echo "error2";
+#            notify-send -t 700 " FUCK ADS " &&
+#            send_mute
+#             echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+#sleep 1 ;
+#exec bash "$0" "$@"
+#        ;;
+#        \n )
+#            echo "AD IS HAPPENING";
+#            echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+#            send_unmute
+#sleep 1 ;
+#exec bash "$0" "$@"
+#        ;;
+#        "spotify is off as fuck" )
+#            #echo "error4";
+#            send_unmute
+#sleep 1 ;
+#exec bash "$0" "$@"
+#        ;;
+#        * )
+#            #echo "error5";
+#            send_unmute;
+#             echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+#sleep 1 ;
+#exec bash "$0" "$@"
+#        ;;
+#        esac;
+##############backup##########backup#######################
+
+#
+#ISMUTE=$( amixer get Master | sed 5q | grep -q '\[off\]' )
+#NOTMUTE=$( amixer get Master | sed 5q | grep -q '\[on\]' )
+#SONG=$( tail ~/.nowplaying2.tmp)
+#
+#send_mute(){
+#    local NOTMUTE=$( amixer get Master | sed 5q | grep -q '\[on\]' )
+#    local TOGGLE=$( pactl set-sink-mute @DEFAULT_SINK@ 1 )
+#if $NOTMUTE; then notify-send " FUCK ADS  MUTING THAT SHIT";
+#$TOGGLE; fi
+#}
+#send_unmute(){
+#    local ISMUTE=$( amixer get Master | sed 5q | grep -q '\[off\]' )
+#    local TOGGLE=$( pactl set-sink-mute @DEFAULT_SINK@ 0 )
+#if $ISMUTE; then $TOGGLE; fi
+#}
+#
+#while : ;
+#do
+#    if pgrep -x "spotify" >/dev/null
+#        then
+#            echo -n $( spotifycli --song ) > ~/.nowplaying2.tmp ;
+#        case $SONG in
+#            "Advertisement" )
+#                send_mute ;
+#                #echo __ad ;
+#                sleep 28
+#                continue
+#                ;;
+#            *)             #TRY INVERING ALL THIS FROM $SONG AND MAKE SPOTOFF AN OPTION
+#                send_unmute ;
+#                #echo __notad ;
+#                sleep 1
+#                continue
+#                ;;
+#           #3*)
+#                #echo SOMETHINGS FUCKED
+#                #;;
+#        esac
+#        else
+#            echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp ;
+#            send_unmute ;
+#    fi; sleep 2
+#done
+#############################################################

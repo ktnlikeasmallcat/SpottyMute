@@ -1,0 +1,26 @@
+#!/bin/bash
+SONG=$( cat ~/.nowplaying2.tmp )
+    #while :; do
+if ! $(pgrep -x "spotify" >/dev/null) ; then
+    tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
+    #echo "error1";
+elif $(pidof -x "spotify">/dev/null ) ; then
+
+    case $SONG in
+    "Advertisement" )
+        tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
+        echo 'MUTED·'
+        #echo "error2";
+    ;;
+    "spotify is off as fuck" )
+        tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
+        echo "error3";
+    ;;
+    * )
+        tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
+        echo $(spotifycli --status)
+        #echo "error4";
+    ;;
+    esac;
+fi
+    #sleep 2; done

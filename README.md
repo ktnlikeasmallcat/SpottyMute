@@ -1,2 +1,2 @@
-# not-now-playing-ads
-Echos "now playing" for clementine, spotify, and cmus. Mutes the system during spotify ads. For the taskbar.
+# SpottyMute
+ One script echos 'now playing' information for clementine, spotify, and cmus. The other mutes the system during spotify ads, thne unmutes once the ad is over. Includes script for the MATE taskbar.

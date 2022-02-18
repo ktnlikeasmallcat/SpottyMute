@@ -1,15 +1,28 @@
+  GNU nano 6.1                                                           /home/ktn/.local/bin/nowplaying                                                                     
 #!/bin/bash
 SONG=$( cat ~/.nowplaying2.tmp )
     #while :; do
+
 if ! $(pgrep -x "spotify" >/dev/null) ; then
-    tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
-    #echo "error1";
+    if ! $(pgrep -x "cmus" >/dev/null) && $(pgrep -x "clementine" >/dev/null); then
+        echo -n $(np -n 2>/dev/null)
+        echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+        #echo "error1";
+    elif ! $(pgrep -x "clementine" >/dev/null) && $(pgrep -x "cmus" >/dev/null); then
+        tail -z ~/.cmus/now-playing
+        echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+    else
+        tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
+        echo -n "spotify is off as fuck" > ~/.nowplaying2.tmp
+    fi
 elif $(pidof -x "spotify">/dev/null ) ; then
+#     echo -n $( spotifycli --status ) > ~/.nowplaying2.tmp ;
+     echo $( spotifycli --status ) > ~/.nowplaying2.tmp ;
 
     case $SONG in
-    "Advertisement" )
+    "-" | "- Shop DGDG.com" | "- Advertisement" | "Advertisement" )
         tail -z ~/.cmus/now-playing & echo -n $(np -n 2>/dev/null);
-        echo 'MUTED·'
+        echo 'AD MUTED·' ; #&& echo 'AD MUTED·' > ~/.nowplaying2.tmp
         #echo "error2";
     ;;
     "spotify is off as fuck" )
@@ -22,5 +35,7 @@ elif $(pidof -x "spotify">/dev/null ) ; then
         #echo "error4";
     ;;
     esac;
+
+    echo -n $( spotifycli --status ) > ~/.nowplaying2.tmp ;
 fi
     #sleep 2; done
